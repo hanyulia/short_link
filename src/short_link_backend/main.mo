@@ -1,7 +1,7 @@
-import Text "mo:base/Text";
 import HashMap "mo:base/HashMap";
+import Text "mo:base/Text";
 import Nat "mo:base/Nat";
-import Debug "mo:base/Debug";
+import Buffer "mo:base/Buffer";
 
 actor {
   type ShortLink = {
@@ -10,7 +10,8 @@ actor {
   };
 
   stable var counter : Nat = 0;
-  stable var links : HashMap.HashMap<Text, Text> = HashMap.HashMap(0, Text.equal, Text.hash);
+
+  var links : HashMap.HashMap<Text, Text> = HashMap.HashMap(0, Text.equal, Text.hash);
 
   public func createShortLink(fullURL : Text) : async Text {
     let shortCode = "icp" # Nat.toText(counter);
@@ -24,10 +25,10 @@ actor {
   };
 
   public query func getAllLinks() : async [ShortLink] {
-    var list : [ShortLink] = [];
+    let buffer = Buffer.Buffer<ShortLink>(0);
     for ((code, url) in links.entries()) {
-      list := list # [{ shortCode = code; fullURL = url }];
+      buffer.add({ shortCode = code; fullURL = url });
     };
-    return list;
+    return Buffer.toArray(buffer);
   };
 };

@@ -1,30 +1,59 @@
-import { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { short_link_backend } from 'declarations/short_link_backend';
+import './index.scss';
 
 function App() {
-  const [greeting, setGreeting] = useState('');
+  const [url, setUrl] = useState('');
+  const [shortCode, setShortCode] = useState('');
+  const [linkList, setLinkList] = useState([]);
 
-  function handleSubmit(event) {
-    event.preventDefault();
-    const name = event.target.elements.name.value;
-    short_link_backend.greet(name).then((greeting) => {
-      setGreeting(greeting);
-    });
-    return false;
-  }
+  const createShort = async () => {
+    if (!url) return;
+    const code = await short_link_backend.createShortLink(url);
+    setShortCode(code);
+    setUrl('');
+    fetchLinks();
+  };
+
+  const fetchLinks = async () => {
+    const links = await short_link_backend.getAllLinks();
+    setLinkList(links);
+  };
+
+  useEffect(() => {
+    fetchLinks();
+  }, []);
 
   return (
-    <main>
-      <img src="/logo2.svg" alt="DFINITY logo" />
-      <br />
-      <br />
-      <form action="#" onSubmit={handleSubmit}>
-        <label htmlFor="name">Enter your name: &nbsp;</label>
-        <input id="name" alt="Name" type="text" />
-        <button type="submit">Click Me!</button>
-      </form>
-      <section id="greeting">{greeting}</section>
-    </main>
+    <div className="app-container">
+      <h1>🔗 ICP Short Link</h1>
+      <div className="input-group">
+        <input
+          type="text"
+          value={url}
+          onChange={(e) => setUrl(e.target.value)}
+          placeholder="Paste long URL here"
+        />
+        <button onClick={createShort}>Shorten</button>
+      </div>
+
+      {shortCode && (
+        <div className="result">
+          Short link created: <strong>{window.location.origin + '/?q=' + shortCode}</strong>
+        </div>
+      )}
+
+      <h2>📄 All Short Links</h2>
+      <ul className="link-list">
+        {linkList.map((link, i) => (
+          <li key={i}>
+            <a href={link.fullURL} target="_blank" rel="noopener noreferrer">
+              {window.location.origin + '/?q=' + link.shortCode}
+            </a> → {link.fullURL}
+          </li>
+        ))}
+      </ul>
+    </div>
   );
 }
 

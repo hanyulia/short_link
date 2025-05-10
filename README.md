@@ -1,5 +1,9 @@
 # `short_link`
 
+## short_link_frontend: `https://54zmq-5qaaa-aaaac-asdpa-cai.icp0.io/`
+
+## short_link_backend: `https://a4gq6-oaaaa-aaaab-qaa4q-cai.raw.icp0.io/?id=5v2hm-lyaaa-aaaac-asdoq-cai`
+
 Welcome to your new `short_link` project and to the Internet Computer development community. By default, creating a new project adds this README and some template files to your project directory. You can edit these template files to customize your project and to include your own code to speed up the development cycle.
 
 To get started, you might want to explore the project directory structure and the default configuration file. Working with this project in your development environment will not affect any production deployment or identity tokens.
